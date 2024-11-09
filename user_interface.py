@@ -15,7 +15,7 @@ from colors import (
 class UserInterface:
     """UserInterface class"""
 
-    MAX_MENU_CHOICES = 5
+    MAX_MENU_CHOICES = 7
 
     # region public methods
 
@@ -75,7 +75,7 @@ class UserInterface:
     def display_already_imported_error(self):
         """Display already imported error"""
         self.display_import_error()
-        print_error("The CSV file has already been imported.")
+        print_error("The CSV file has already been imported into the database.")
 
     def display_file_not_found_error(self):
         """Display file not found error"""
@@ -113,17 +113,32 @@ class UserInterface:
     def display_item_found_error(self):
         """Display Item found error."""
         print()
-        print_error("Can not find a item with that id.")
+        print_error("Can not find an item with that id.")
 
     def display_add_beverage_success(self):
         """Display Add Item success."""
         print()
-        print_success("The item was successfully added.")
+        print_success("The item was successfully added to the database.")
 
     def display_beverage_already_exists_error(self):
         """Display Item already exists error."""
         print()
-        print_error("Unable to add. An item with that id already exists.")
+        print_error("Unable to add. An item with that id already exists in the database.")
+
+    def display_update_beverage_success(self):
+        """Display Item update success message."""
+        print()
+        print_success("The item was successfully updated.")
+
+    def display_beverage_update_error(self):
+        """Display Item update error."""
+        print()
+        print_error("Can not find a item to be updated with that id.")
+    
+    def display_delete_beverage_success(self):
+        """Display Item deletion success message."""
+        print()
+        print_success("The item was successfully deleted from the database.")
 
     # endregion public methods
 
@@ -139,10 +154,12 @@ class UserInterface:
         print("What would you like to do?")
         print()
         print("1. Load Beverage List From CSV")
-        print("2. Print Entire List Of Items")
+        print("2. Demo Database and Print Entire List Of Items")
         print("3. Search For An Item")
         print("4. Add New Item To The List")
-        print("5. Exit Program")
+        print("5. Update an existing Beverage")
+        print("6. Delete an existing Beverage")
+        print("7. Exit Program")
 
     def __display_main_prompt(self):
         """Display the Prompt"""

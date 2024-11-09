@@ -2,7 +2,7 @@
 
 ## Author
 
-
+Robert Depweg
 
 ## Description
 
@@ -79,8 +79,8 @@ If I can not restore your packages easily, I will not grade the assignment.
 
 ## Outside Resources Used
 
-
+(https://docs.sqlalchemy.org/en/20/core/type_basics.html#sqlalchemy.types.Boolean)
 
 ## Known Problems, Issues, And/Or Errors in the Program
 
-
+None

@@ -3,7 +3,6 @@
 # Internal Imports
 from errors import AlreadyImportedError
 
-
 class CSVProcessor:
     """CSV Processing Class"""
 
@@ -11,7 +10,7 @@ class CSVProcessor:
         """Constructor"""
         self._has_been_imported = False
 
-    def import_csv(self, beverage_collection, path_to_csv_file):
+    def import_csv(self, path_to_csv_file, beverage_repository):
         """Import CSV and populate beverage collection"""
 
         # If already imported, raise AlreadyImportedError
@@ -25,13 +24,13 @@ class CSVProcessor:
             # While the line is not None
             while line:
                 # Process the line.
-                self._process_line(line, beverage_collection)
+                self._process_line(line, beverage_repository)
                 # Read next line.
                 line = file.readline().replace("\n", "")
             # All lines read and processed, flip flag to true.
             self._has_been_imported = True
 
-    def _process_line(self, line, beverage_collection):
+    def _process_line(self, line, beverage_repository):
         """Process a line from a CSV file"""
 
         # Split line by comma
@@ -45,4 +44,4 @@ class CSVProcessor:
         active = parts[4] == "True"
 
         # Add a new beverage to the collection with the properties of what was read in.
-        beverage_collection.add(item_id, name, pack, price, active)
+        beverage_repository.insert(item_id, name, pack, price, active)
