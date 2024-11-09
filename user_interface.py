@@ -48,7 +48,7 @@ class UserInterface:
     def get_search_query(self):
         """Get the search query from the user."""
         print()
-        print("What would you like to search for?")
+        print("What ID would you like to search for?")
         self.__display_prompt()
         return input()
 

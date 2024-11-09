@@ -34,11 +34,11 @@ def main(*args):
     # While the choice is not exit program
     while choice != 7:
         if choice == 1:
-            # Load the CSV File
+            # Load the CSV File, populates the database
             try:
                 # Check to see if there are any records in the DB
                 # If not, use CSV to load up Employees. Then put in DB.
-                if beverage_repository.db_status() is None:
+                if beverage_repository.db_status(beverage_repository) is None:
                                 
                     # Call the import_csv method sending in our path to the csv and the Employee list.
                     csv_processor.import_csv(PATH_TO_CSV, beverage_repository)
@@ -68,12 +68,11 @@ def main(*args):
                 ui.display_all_items_error()
 
         elif choice == 3:
-            # Search for an Item by it's id
+            # Search for an Item by it's id in the database
             search_query = ui.get_search_query()
-            item_info = beverage_repository.find_by_id(search_query)
-            if item_info:
-                # beverage_by_id = session.query(Employee).get(1)
-                ui.display_item_found(item_info)
+            beverage_by_id = beverage_repository.query_by_id(beverage_repository, search_query)
+            if beverage_by_id:
+                ui.display_item_found(beverage_by_id)
             else:
                 ui.display_item_found_error()
 
@@ -94,7 +93,7 @@ def main(*args):
         
         elif choice == 5:
             # Update existing beverage
-            new_item_info = ui.get_new_item_information()
+            search_query = ui.get_search_query()
             if beverage_repository.find_by_id(new_item_info[0]) is not None:
                 beverage_repository.update(new_item_info)
                 ui.display_update_beverage_success()
@@ -103,7 +102,7 @@ def main(*args):
 
         elif choice == 6:
             # Delete existing beverage
-            new_item_info = ui.get_new_item_information()
+            search_query = ui.get_search_query()
             if beverage_repository.find_by_id(new_item_info[0]) is not None:
                 beverage_repository.delete(new_item_info)
                 ui.display_delete_beverage_success()

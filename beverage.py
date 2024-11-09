@@ -21,10 +21,16 @@ session = Session()
 Base = declarative_base()
 
 
-class Beverage:
+class Beverage(Base):
     """Beverage class"""
     
     __tablename__ = "beverages"
+
+    id = Column(String(255), primary_key=True) # TODO: no auto increment, something else?
+    name = Column(String(255), nullable=False)
+    pack = Column(String(255), nullable=False)
+    price = Column(Float(2), nullable=False)
+    active = Column(Boolean, nullable=False)
 
     def __init__(self, id_, name, pack, price, active):
         """Constructor"""
@@ -40,16 +46,8 @@ class Beverage:
         return f"| {self.id:>6} | {self.name:<56} | {self.pack:<15} | {self.price:>6.2f} | {active:<6} |"
 
 
-class BeverageRepository(Base):
+class BeverageRepository:
     """BeverageRepository class"""
-
-    __tablename__ = "beverage repository"
-
-    id = Column(String, primary_key=True, autoincrement="auto")
-    name = Column(String(255), nullable=False)
-    pack = Column(String(255), nullable=False)
-    price = Column(Float(2), nullable=False)
-    active = Column(Boolean, nullable=False)
 
     def __init__(self):
         """Constructor"""
@@ -67,9 +65,9 @@ class BeverageRepository(Base):
         """Create the database"""
         Base.metadata.create_all(engine)
 
-    def db_status(self):
+    def db_status(self, beverage_repository):
         """Returns if database has items inside or not"""
-        return session.query(BeverageRepository).first()
+        return session.query(beverage_repository).first()
     
     def populate_database(employees):
         """Populate database from list of employees"""
@@ -83,18 +81,9 @@ class BeverageRepository(Base):
         session.add(new_beverage)
         session.commit()
 
-    def update(self, id_):
-        """"""
-        beverage_to_update = (
-            session.query(
-                Beverage,
-            )
-            .filter(
-                Beverage.id == "David"
-            )
-            .first()
-        )
-
+    def update(self, entry):
+        """Updates beverage in database"""
+        session.query(Beverage).filter(Beverage.id == entry).first()
         session.commit()
 
     def delete(self):
@@ -108,13 +97,10 @@ class BeverageRepository(Base):
             )
             .first()
         )
-        session.delete(beverage_to_delete)
         session.commit()
 
-    def find_by_id(self, id_):
+    def query_by_id(self, beverage_repository, id_):
         """Find a beverage by it's id"""
-        for beverage in self.__beverages:
-            if beverage.id == id_:
-                return beverage
+        session.query(beverage_repository).get(id_)
             
             
