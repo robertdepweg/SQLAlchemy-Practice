@@ -36,20 +36,21 @@ def main(*args):
         if choice == 1:
             # Load the CSV File, populates the database
             try:
+                # If we do not have the database, we can create it.
+                if not os.path.exists("./db.sqlite3"):
+                    # Create the database
+                    beverage_repository.create_database()
+
                 # Check to see if there are any records in the DB
-                # If not, use CSV to load up Employees. Then put in DB.
-                if beverage_repository.db_status(beverage_repository) is None:
+                # If not, use CSV to load up Beverages. Then put in DB.
+                if beverage_repository.db_status() is None:
                                 
                     # Call the import_csv method sending in our path to the csv and the Employee list.
                     csv_processor.import_csv(PATH_TO_CSV, beverage_repository)
 
                     # Populate the database with data from the CSV
-                    csv_processor.populate_database(beverage_repository)
+                    beverage_repository.populate_database()
 
-                # If we do not have the database, we can create it.
-                if not os.path.exists("./db.sqlite3"):
-                    # Create the database
-                    beverage_repository.create_database()
                     csv_processor.import_csv(beverage_repository, PATH_TO_CSV)
                     ui.display_import_success()
             except AlreadyImportedError:
@@ -70,7 +71,7 @@ def main(*args):
         elif choice == 3:
             # Search for an Item by it's id in the database
             search_query = ui.get_search_query()
-            beverage_by_id = beverage_repository.query_by_id(beverage_repository, search_query)
+            beverage_by_id = beverage_repository.query_by_id(search_query)
             if beverage_by_id:
                 ui.display_item_found(beverage_by_id)
             else:
@@ -79,7 +80,7 @@ def main(*args):
         elif choice == 4:
             # Collect information for a new item and insert it into the database
             new_item_info = ui.get_new_item_information()
-            if beverage_repository.find_by_id(new_item_info[0]) is None:
+            if beverage_repository.query_by_id(new_item_info[0]) is None:
                 beverage_repository.insert(
                     new_item_info[0],
                     new_item_info[1],
@@ -94,7 +95,7 @@ def main(*args):
         elif choice == 5:
             # Update existing beverage
             search_query = ui.get_search_query()
-            if beverage_repository.find_by_id(new_item_info[0]) is not None:
+            if beverage_repository.query_by_id(new_item_info[0]) is not None:
                 beverage_repository.update(new_item_info)
                 ui.display_update_beverage_success()
             else:
@@ -103,7 +104,7 @@ def main(*args):
         elif choice == 6:
             # Delete existing beverage
             search_query = ui.get_search_query()
-            if beverage_repository.find_by_id(new_item_info[0]) is not None:
+            if beverage_repository.query_by_id(new_item_info[0]) is not None:
                 beverage_repository.delete(new_item_info)
                 ui.display_delete_beverage_success()
             else:

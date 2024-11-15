@@ -49,9 +49,7 @@ class Beverage(Base):
 class BeverageRepository:
     """BeverageRepository class"""
 
-    def __init__(self):
-        """Constructor"""
-        self.__beverages = []
+    _collection = []
 
     def __str__(self):
         """String method"""
@@ -65,14 +63,14 @@ class BeverageRepository:
         """Create the database"""
         Base.metadata.create_all(engine)
 
-    def db_status(self, beverage_repository):
+    def db_status(self):
         """Returns if database has items inside or not"""
-        return session.query(beverage_repository).first()
+        return session.query(Beverage).first()
     
-    def populate_database(employees):
+    def populate_database(self):
         """Populate database from list of employees"""
-        for employee in employees:
-            session.add(employee)
+        for bev in self._collection:
+            session.add(bev)
             session.commit()
 
     def insert(self, id_, name, pack, price, active):
@@ -99,8 +97,8 @@ class BeverageRepository:
         )
         session.commit()
 
-    def query_by_id(self, beverage_repository, id_):
+    def query_by_id(self, id):
         """Find a beverage by it's id"""
-        session.query(beverage_repository).get(id_)
+        session.query(BeverageRepository).get(id)
             
             
