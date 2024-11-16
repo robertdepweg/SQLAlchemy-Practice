@@ -5,7 +5,7 @@ import os
 
 # Internal imports.
 from beverage import BeverageRepository
-from errors import AlreadyImportedError
+from errors import AlreadyImportedError, DatabaseImportError
 from user_interface import UserInterface
 from utils import CSVProcessor
 
@@ -38,8 +38,11 @@ def main(*args):
             try:
                 # If we do not have the database, we can create it.
                 if not os.path.exists("./db.sqlite3"):
+                    
                     # Create the database
                     beverage_repository.create_database()
+                else:
+                    raise DatabaseImportError
 
                 # Check to see if there are any records in the DB
                 # If not, use CSV to load up Beverages. Then put in DB.
@@ -51,42 +54,44 @@ def main(*args):
                     # Populate the database with data from the CSV
                     beverage_repository.populate_database()
 
-                    csv_processor.import_csv(beverage_repository, PATH_TO_CSV)
+                    # Displays import success message
                     ui.display_import_success()
             except AlreadyImportedError:
                 ui.display_already_imported_error()
+            except DatabaseImportError:
+                ui.display_database_import_error()
             except FileNotFoundError:
                 ui.display_file_not_found_error()
             except EOFError:
                 ui.display_empty_file_error()
 
         elif choice == 2:
-            # Print Entire List Of Items
-            all_item_string = str(beverage_repository)
-            if all_item_string:
-                ui.display_all_items(all_item_string)
+            # Print Entire List Of Beverages
+            all_beverage_string = str(beverage_repository)
+            if all_beverage_string:
+                ui.display_all_beverages(all_beverage_string)
             else:
-                ui.display_all_items_error()
+                ui.display_all_beverages_error()
 
         elif choice == 3:
-            # Search for an Item by it's id in the database
+            # Search for an Beverage by it's id in the database
             search_query = ui.get_search_query()
             beverage_by_id = beverage_repository.query_by_id(search_query)
             if beverage_by_id:
-                ui.display_item_found(beverage_by_id)
+                ui.display_beverage_found(beverage_by_id)
             else:
-                ui.display_item_found_error()
+                ui.display_beverage_found_error()
 
         elif choice == 4:
-            # Collect information for a new item and insert it into the database
-            new_item_info = ui.get_new_item_information()
-            if beverage_repository.query_by_id(new_item_info[0]) is None:
+            # Collect information for a new beverage and insert it into the database
+            new_beverage_info = ui.get_new_beverage_information()
+            if beverage_repository.query_by_id(new_beverage_info[0]) is None:
                 beverage_repository.insert(
-                    new_item_info[0],
-                    new_item_info[1],
-                    new_item_info[2],
-                    float(new_item_info[3]),
-                    new_item_info[4] == "True",
+                    new_beverage_info[0],
+                    new_beverage_info[1],
+                    new_beverage_info[2],
+                    float(new_beverage_info[3]),
+                    new_beverage_info[4] == "True",
                 )
                 ui.display_add_beverage_success()
             else:
@@ -95,8 +100,9 @@ def main(*args):
         elif choice == 5:
             # Update existing beverage
             search_query = ui.get_search_query()
-            if beverage_repository.query_by_id(new_item_info[0]) is not None:
-                beverage_repository.update(new_item_info)
+            if beverage_repository.query_by_id(search_query) is not None:
+                new_beverage_info = ui.get_new_beverage_information()
+                beverage_repository.update(search_query, new_beverage_info)
                 ui.display_update_beverage_success()
             else:
                 ui.display_beverage_update_error()
@@ -104,11 +110,11 @@ def main(*args):
         elif choice == 6:
             # Delete existing beverage
             search_query = ui.get_search_query()
-            if beverage_repository.query_by_id(new_item_info[0]) is not None:
-                beverage_repository.delete(new_item_info)
+            if beverage_repository.query_by_id(search_query) is not None:
+                beverage_repository.delete(search_query)
                 ui.display_delete_beverage_success()
             else:
-                ui.display_item_found_error()
+                ui.display_beverage_found_error()
 
         # Get the new choice of what to do from the user.
         choice = ui.display_menu_and_get_response()

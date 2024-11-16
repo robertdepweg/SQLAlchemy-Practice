@@ -26,7 +26,7 @@ class Beverage(Base):
     
     __tablename__ = "beverages"
 
-    id = Column(String(255), primary_key=True) # TODO: no auto increment, something else?
+    id = Column(String(255), primary_key=True)
     name = Column(String(255), nullable=False)
     pack = Column(String(255), nullable=False)
     price = Column(Float(2), nullable=False)
@@ -49,8 +49,6 @@ class Beverage(Base):
 class BeverageRepository:
     """BeverageRepository class"""
 
-    _collection = []
-
     def __str__(self):
         """String method"""
         beverages = session.query(Beverage).all()
@@ -64,12 +62,13 @@ class BeverageRepository:
         Base.metadata.create_all(engine)
 
     def db_status(self):
-        """Returns if database has items inside or not"""
-        return session.query(Beverage).first()
+        """Returns if database has beverages inside or not"""
+        session.query(Beverage).first()
     
     def populate_database(self):
-        """Populate database from list of employees"""
-        for bev in self._collection:
+        """Populate database from list of beverages"""
+        beverages = session.query(Beverage).all()
+        for bev in beverages:
             session.add(bev)
             session.commit()
 
@@ -79,26 +78,49 @@ class BeverageRepository:
         session.add(new_beverage)
         session.commit()
 
-    def update(self, entry):
+    def update(self, search_query, new_info):
         """Updates beverage in database"""
-        session.query(Beverage).filter(Beverage.id == entry).first()
+        beverage_to_update = (
+            session.query(
+                Beverage,
+            )
+            .filter(
+                Beverage.id == search_query
+            )
+            .first()
+        )
+
+        beverage_to_update.id = new_info[0]
+        beverage_to_update.name = new_info[1]
+        beverage_to_update.pack = new_info[2]
+        beverage_to_update.price = float(new_info[3])
+        beverage_to_update.active = bool(new_info[4])
         session.commit()
 
-    def delete(self):
+    def delete(self, search_query):
         """Deletes beverage from database"""
         beverage_to_delete = (
             session.query(
                 Beverage,
             )
             .filter(
-                Beverage.first_name == "David",
+                Beverage.id == search_query,
             )
             .first()
         )
+        session.delete(beverage_to_delete)
         session.commit()
 
-    def query_by_id(self, id):
+    def query_by_id(self, search_query):
         """Find a beverage by it's id"""
-        session.query(BeverageRepository).get(id)
+        single_beverage_by_critera = (
+            session.query(
+                Beverage,
+            )
+            .filter(Beverage.id == search_query,
+            )
+            .first()
+            )
+        return single_beverage_by_critera
             
             

@@ -52,8 +52,8 @@ class UserInterface:
         self.__display_prompt()
         return input()
 
-    def get_new_item_information(self):
-        """Get new Item information from the user."""
+    def get_new_beverage_information(self):
+        """Get new Beverage information from the user."""
         return (
             self.__get_str_field("Id"),
             self.__get_str_field("Name"),
@@ -77,6 +77,11 @@ class UserInterface:
         self.display_import_error()
         print_error("The CSV file has already been imported into the database.")
 
+    def display_database_import_error(self):
+        """Display database import error"""
+        self.display_import_error()
+        print_error("The database already exists.")
+
     def display_file_not_found_error(self):
         """Display file not found error"""
         self.display_import_error()
@@ -87,58 +92,58 @@ class UserInterface:
         self.display_import_error()
         print_error("The file was unexpectedly empty.")
 
-    def display_all_items(self, all_items_output):
-        """Display all Items."""
+    def display_all_beverages(self, all_beverages_output):
+        """Display all Beverages."""
         print()
         print_success("Printing list")
         print()
-        print_warning(self.__get_item_header())
-        print(all_items_output, end="")
+        print_warning(self.__get_beverage_header())
+        print(all_beverages_output, end="")
         print(self.__get_line_separator())
 
-    def display_all_items_error(self):
-        """Display all Items error."""
+    def display_all_beverages_error(self):
+        """Display all Beverages error."""
         print()
-        print_error("There are no items in the list to print.")
+        print_error("There are no beverages in the list to print.")
 
-    def display_item_found(self, item_information):
-        """Display Item found success."""
+    def display_beverage_found(self, beverage_information):
+        """Display Beverage found success."""
         print()
-        print_success("Item Found!")
+        print_success("Beverage Found!")
         print()
-        print_warning(self.__get_item_header())
-        print(item_information)
+        print_warning(self.__get_beverage_header())
+        print(beverage_information)
         print(self.__get_line_separator())
 
-    def display_item_found_error(self):
-        """Display Item found error."""
+    def display_beverage_found_error(self):
+        """Display Beverage found error."""
         print()
-        print_error("Can not find an item with that id.")
+        print_error("Could not find a beverage with that id.")
 
     def display_add_beverage_success(self):
-        """Display Add Item success."""
+        """Display Add Beverage success."""
         print()
-        print_success("The item was successfully added to the database.")
+        print_success("The beverage was successfully added to the database.")
 
     def display_beverage_already_exists_error(self):
-        """Display Item already exists error."""
+        """Display Beverage already exists error."""
         print()
-        print_error("Unable to add. An item with that id already exists in the database.")
+        print_error("Unable to add. A Beverage with that id already exists in the database.")
 
     def display_update_beverage_success(self):
-        """Display Item update success message."""
+        """Display Beverage update success message."""
         print()
-        print_success("The item was successfully updated.")
+        print_success("The beverage's information was successfully updated.")
 
     def display_beverage_update_error(self):
-        """Display Item update error."""
+        """Display Beverage update error."""
         print()
-        print_error("Can not find a item to be updated with that id.")
+        print_error("Could not find a beverage to be updated with that id.")
     
     def display_delete_beverage_success(self):
-        """Display Item deletion success message."""
+        """Display Beverage deletion success message."""
         print()
-        print_success("The item was successfully deleted from the database.")
+        print_success("The beverage was successfully deleted from the database.")
 
     # endregion public methods
 
@@ -154,9 +159,9 @@ class UserInterface:
         print("What would you like to do?")
         print()
         print("1. Load Beverage List From CSV")
-        print("2. Demo Database and Print Entire List Of Items")
-        print("3. Search For An Item")
-        print("4. Add New Item To The List")
+        print("2. Print Entire Beverage Database")
+        print("3. Search For A Beverage")
+        print("4. Add New Beverage To The Database")
         print("5. Update an existing Beverage")
         print("6. Delete an existing Beverage")
         print("7. Exit Program")
@@ -177,8 +182,8 @@ class UserInterface:
         line_str = "-"
         return f"+{line_str*8}+{line_str*58}+{line_str*17}+{line_str*8}+{line_str*8}+"
 
-    def __get_item_header(self):
-        """Display the Item header."""
+    def __get_beverage_header(self):
+        """Display the Beverage header."""
         id_str = "Id"
         name_str = "Name"
         pack_str = "Pack"
@@ -217,7 +222,7 @@ class UserInterface:
 
     def __get_str_field(self, field_name):
         """Get a valid string field from the console."""
-        print(f"What is the new Item's {field_name}?")
+        print(f"What is the new Beverage's {field_name}?")
         self.__display_prompt()
         valid = False
         while not valid:
@@ -227,13 +232,13 @@ class UserInterface:
             else:
                 print_error("You must provide a value.")
                 print()
-                print(f"What is the new Item's {field_name}?")
+                print(f"What is the new Beverage's {field_name}?")
                 self.__display_prompt()
         return str(value)
 
     def __get_decimal_field(self, field_name):
         """Get a valid Decimal field from the console."""
-        print(f"What is the new Item's {field_name}?")
+        print(f"What is the new Beverage's {field_name}?")
         self.__display_prompt()
         valid = False
         while not valid:
@@ -243,13 +248,13 @@ class UserInterface:
             except ValueError:
                 print_error("That is not a valid Decimal. Please enter a valid Decimal.")
                 print()
-                print(f"What is the new Item's {field_name}?")
+                print(f"What is the new Beverage's {field_name}?")
                 self.__display_prompt()
         return str(value)
 
     def __get_bool_field(self, fieldname):
         """Get a valid Bool field from the console."""
-        print(f"Should the Item be {fieldname}? (y/n)")
+        print(f"Should the Beverage be {fieldname}? (y/n)")
         self.__display_prompt()
         valid = False
         while not valid:
@@ -260,7 +265,7 @@ class UserInterface:
             else:
                 print_error("That is not a valid Entry.")
                 print()
-                print(f"Should the Item be {fieldname}? (y/n)")
+                print(f"Should the Beverage be {fieldname}? (y/n)")
                 self.__display_prompt()
 
         return str(value)
