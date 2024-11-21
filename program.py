@@ -100,9 +100,27 @@ def main(*args):
         elif choice == 5:
             # Update existing beverage
             search_query = ui.get_search_query()
+            # If the item does exist
             if beverage_repository.query_by_id(search_query) is not None:
-                new_beverage_info = ui.get_new_beverage_information()
-                beverage_repository.update(search_query, new_beverage_info)
+                new_beverage_info = ui.get_updated_information()
+
+                # Checks updated price
+                updated_price = new_beverage_info[2]
+                if updated_price is not None:
+                    updated_price = float(updated_price)
+                # Checks updated active
+                updated_active = new_beverage_info[3]
+                if updated_active is not None:
+                    updated_active = updated_active == "True"
+
+                beverage_repository.update(
+                    search_query, 
+                    new_beverage_info[0],
+                    new_beverage_info[1],
+                    updated_price,
+                    updated_active
+                    )
+                
                 ui.display_update_beverage_success()
             else:
                 ui.display_beverage_update_error()

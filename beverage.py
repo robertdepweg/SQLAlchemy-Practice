@@ -78,24 +78,19 @@ class BeverageRepository:
         session.add(new_beverage)
         session.commit()
 
-    def update(self, search_query, new_info):
+    def update(self, id_, name, pack, price, active):
         """Updates beverage in database"""
-        beverage_to_update = (
-            session.query(
-                Beverage,
-            )
-            .filter(
-                Beverage.id == search_query
-            )
-            .first()
-        )
-
-        beverage_to_update.id = new_info[0]
-        beverage_to_update.name = new_info[1]
-        beverage_to_update.pack = new_info[2]
-        beverage_to_update.price = float(new_info[3])
-        beverage_to_update.active = bool(new_info[4])
-        session.commit()
+        beverage_to_update = self.query_by_id(id_)
+        if beverage_to_update is not None:
+            if name is not None:
+                beverage_to_update.name = name
+            if pack is not None:
+                beverage_to_update.pack = pack
+            if price is not None:
+                beverage_to_update.price = price
+            if active is not None:
+                beverage_to_update.active = active
+            session.commit()
 
     def delete(self, search_query):
         """Deletes beverage from database"""

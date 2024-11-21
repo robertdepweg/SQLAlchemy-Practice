@@ -61,6 +61,40 @@ class UserInterface:
             self.__get_decimal_field("Price"),
             self.__get_bool_field("Active"),
         )
+    
+    def get_updated_information(self):
+        """Get updated information from the user"""
+
+        # Defaults if they aren't chosen
+        name = None
+        pack = None
+        price = None
+        active = None
+
+        # Asks user for each field's information
+        # Asks for name
+        response = self.__get_bool_field("Name", "Do you want to update the beverage's name? (y/n)")
+        if response == "True":
+            price = self.__get_str_field("Name")
+        # Asks for pack
+        response = self.__get_bool_field("Pack", "Do you want to update the beverage's pack? (y/n)")
+        if response == "True":
+            price = self.__get_str_field("Pack")
+        # Asks for price
+        response = self.__get_bool_field("Price", "Do you want to update the beverage's price? (y/n)")
+        if response == "True":
+            price = self.__get_str_field("Price")
+        # Asks for availability
+        response = self.__get_bool_field("Active", "Do you want to update the beverage's availability? (y/n)")
+        if response == "True":
+            active = self.__get_bool_field("Active")
+
+        return (
+            name,
+            pack,
+            price,
+            active
+        )
 
     def display_import_success(self):
         """Display import success."""
@@ -252,9 +286,11 @@ class UserInterface:
                 self.__display_prompt()
         return str(value)
 
-    def __get_bool_field(self, fieldname):
+    def __get_bool_field(self, fieldname, message=None):
         """Get a valid Bool field from the console."""
-        print(f"Should the Beverage be {fieldname}? (y/n)")
+        if message is None:
+            message = f"Should the Beverage be {fieldname}? (y/n)"
+        print(message)
         self.__display_prompt()
         valid = False
         while not valid:
